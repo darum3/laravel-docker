@@ -1,0 +1,97 @@
+# needs: export UID
+#
+version: '3'
+volumes:
+    src:
+        driver_opts:
+            type: local
+            device: ${PWD}/laravel
+            o: bind
+
+networks:
+    my_network:
+    proxy_ext_network:
+        external: true
+
+services:
+    npm:
+        build:
+            context: ./
+            dockerfile: ./npm/Dockerfile
+        volumes:
+            - src:/laravel
+        user: "${UID}"
+        environment:
+            - TZ=Asia/Tokyo
+    composer:
+        build: 
+            context: ./
+            dockerfile: ./composer/Dockerfile
+            args:
+                - PHP_VERSION
+        volumes: 
+            - ./composer:/composer
+            - ./laravel:/laravel
+        user: ${UID}
+    artisan:
+        build: 
+            context: ./
+            dockerfile: ./artisan/Dockerfile
+            args:
+                - PHP_VERSION
+        volumes:
+            - src:/laravel
+        depends_on:
+            - composer
+        user: "${UID}"
+        networks:
+            - my_network
+        environment:
+            - TZ=Asia/Tokyo
+    phpunit:
+        build:
+            context: ./
+            dockerfile: ./phpunit/Dockerfile
+            args:
+                - PHP_VERSION
+        volumes:
+            - src:/laravel
+        depends_on:
+            - composer
+        user: "${UID}"
+        networks:
+            - my_network
+        environment:
+            - TZ=Asia/Tokyo
+    laravel:
+        build:
+            context: ./
+            dockerfile: ./laravel/Dockerfile
+            args:
+                - PHP_VERSION
+        volumes: 
+            - src:/laravel
+            - ./laravel/php.ini:/usr/local/etc/php/php.ini
+        environment: 
+            - TZ=Asia/Tokyo
+        depends_on:
+            - npm
+            - artisan
+        networks:
+            - my_network
+        restart: always
+    web:
+        build:
+            context: ./
+            dockerfile: web/Dockerfile
+        depends_on:
+            - laravel
+        volumes:
+            - ./web/vhost.conf:/etc/nginx/conf.d/default.conf
+        environment:
+            - TZ=Asia/Tokyo
+        networks:
+            - my_network
+            - proxy_ext_network
+        restart: always
+    
