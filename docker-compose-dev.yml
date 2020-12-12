@@ -10,12 +10,12 @@ services:
         depends_on:
             - dev_mysql
     dev_mysql:
-        build:
-            context: ./
-            dockerfile: ./mysql/Dockerfile
+        image: mysql:8.0
         user: "${UID}"
         environment:
             - TZ=Asia/Tokyo
+            - MYSQL_DATABASE=env
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         volumes:
             - ./mysql/data:/var/lib/mysql
             - ./mysql/conf.d:/etc/mysql/conf.d
