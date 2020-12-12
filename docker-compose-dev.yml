@@ -2,9 +2,6 @@ version: '3'
 services:
     web: 
         ports:
-    artisan:
-        depends_on: 
-            - dev_mysql
             - "${PORT_PREFIX}0080:80"
     laravel:
         depends_on: 

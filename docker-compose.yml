@@ -33,21 +33,6 @@ services:
             - ./composer:/composer
             - ./laravel:/laravel
         user: ${UID}
-    artisan:
-        build: 
-            context: ./
-            dockerfile: ./artisan/Dockerfile
-            args:
-                - PHP_VERSION
-        volumes:
-            - src:/laravel
-        depends_on:
-            - composer
-        user: "${UID}"
-        networks:
-            - my_network
-        environment:
-            - TZ=Asia/Tokyo
     phpunit:
         build:
             context: ./
@@ -76,7 +61,7 @@ services:
             - TZ=Asia/Tokyo
         depends_on:
             - npm
-            - artisan
+            - composer
         networks:
             - my_network
         restart: always
