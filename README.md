@@ -7,15 +7,15 @@ Docker環境でLaravelプロジェクトを動かすベースプロジェクト
 
 ## 各種バージョン
 PHPのバージョンは任意に指定可能
-* Laravel6
-* nginx 1.15
-* MySQL 5.8 (開発用)
+* Laravel8
+* nginx 1.19 (alipine)
+* MySQL 8.0 (開発用)
 
 ## 使い方
 
 ### サーバ環境
 
-リバースプロキシ用のnginxが、`proxy_ext_network`という名前でネットワークを作成している前提で、
+リバースプロキシ用のnginxが外部にあり、`proxy_ext_network`という名前でネットワークを作成している前提で、
 webのコンテナに接続できるようにしている。
 
 * `.env`を作る
@@ -62,7 +62,7 @@ webのコンテナに接続できるようにしている。
         DB_PORT=3306
         DB_DATABASE=dev
         DB_USERNAME=root
-        DB_PASSWORD=zaq123
+        DB_PASSWORD=
         ```
     * `./dev.sh run --rm artisan key:generate`
     * 起動の確認
