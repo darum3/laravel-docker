@@ -24,11 +24,7 @@ services:
         environment:
             - TZ=Asia/Tokyo
     composer:
-        build: 
-            context: ./
-            dockerfile: ./composer/Dockerfile
-            args:
-                - PHP_VERSION
+        image: composer:2
         volumes: 
             - ./composer:/composer
             - ./laravel:/laravel
