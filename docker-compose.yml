@@ -27,7 +27,7 @@ services:
         image: composer:2
         volumes: 
             - ./composer:/composer
-            - ./laravel:/laravel
+            - ./laravel:/app
         user: ${UID}
     phpunit:
         build:
